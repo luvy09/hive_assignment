@@ -847,9 +847,70 @@ Versailles      4       59074.9
 White Plains    4       85555.98999999998
   
 h. Find a month for each year in which maximum number of quantities were sold
- command->select MAX(ordered_quantity) as max,month_id,year_id from sales_order_orc group by year_id;
+ command->with cte as (select 
+year_id,
+month_id,
+sum(quantity_ordered) as total_quantity,
+row_number() over(partition by year_id 
+order by sum(quantity_ordered) desc) 
+as row_no from sales_order_orc 
+group by year_id,month_id) 
+select  
+year_id,
+month_id,
+total_quantity
+from cte where row_no=1;
+ 
   >>>>>>>>>>>result<<<<<<<<<< 
   
+  Query ID = cloudera_20230407084848_4ec567e0-9bbe-44c3-bb92-2a0d2429a53c
+Total jobs = 2
+Launching Job 1 out of 2
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1680853947493_0013, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1680853947493_0013/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1680853947493_0013
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-04-07 08:48:38,487 Stage-1 map = 0%,  reduce = 0%
+2023-04-07 08:49:00,152 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 2.59 sec
+2023-04-07 08:49:19,567 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 4.79 sec
+MapReduce Total cumulative CPU time: 4 seconds 790 msec
+Ended Job = job_1680853947493_0013
+Launching Job 2 out of 2
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1680853947493_0014, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1680853947493_0014/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1680853947493_0014
+Hadoop job information for Stage-2: number of mappers: 1; number of reducers: 1
+2023-04-07 08:49:39,125 Stage-2 map = 0%,  reduce = 0%
+2023-04-07 08:49:56,200 Stage-2 map = 100%,  reduce = 0%, Cumulative CPU 1.76 sec
+2023-04-07 08:50:17,868 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 4.45 sec
+MapReduce Total cumulative CPU time: 4 seconds 450 msec
+Ended Job = job_1680853947493_0014
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 4.79 sec   HDFS Read: 29369 HDFS Write: 792 SUCCESS
+Stage-Stage-2: Map: 1  Reduce: 1   Cumulative CPU: 4.45 sec   HDFS Read: 8623 HDFS Write: 40 SUCCESS
+Total MapReduce CPU Time Spent: 9 seconds 240 msec
+OK
+2003    11      10179
+2004    11      10678
+2005    5       4357
+Time taken: 127.299 seconds, Fetched: 3 row(s)
+
+  
   >>>>>>Answer<<<<<<
+->2003    11      10179 <-
+ 2004    11      10678
+ 2005    5       4357
   
   
