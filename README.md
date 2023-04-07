@@ -1,17 +1,19 @@
-1. link for dataset used in this assignment sales_order_data.csv  -> https://github.com/shashank-mishra219/Hive-Class/blob/main/sales_order_data.csv
+1. dataset used in this assignment  ->sales_order_data.csv
 
-2. Store raw data into hdfs location
-
-3. Create a internal hive table "sales_order_csv" which will store csv data sales_order_csv .. make sure to skip header row while creating table
-
-4. Load data from hdfs path into "sales_order_csv" 
-
-5. Create an internal hive table which will store data in ORC format "sales_order_orc"
-
-6. Load data from "sales_order_csv" into "sales_order_orc"
+2. command to Store raw data into hdfs location
 
 
-Perform below menioned queries on "sales_order_orc" table :
+
+3. command to Create a internal hive table "sales_order_csv" which will store csv data sales_order_csv .. make sure to skip header row while creating table
+
+4. command to Load data from hdfs path into "sales_order_csv" 
+
+5. command to Create an internal hive table which will store data in ORC format "sales_order_orc"
+
+6. command to Load data from "sales_order_csv" into "sales_order_orc"
+
+
+commands to Perform below menioned queries on "sales_order_orc" table :
 
 a. Calculatye total sales per year
 b. Find a product for which maximum orders were placed
