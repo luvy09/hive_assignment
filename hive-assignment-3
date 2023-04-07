@@ -44,8 +44,40 @@ command ->  create database hive_assign;
         ->  use hive_assign;
         
 then create table "sales_order_csv" to store csv data "sales_order_csv"
-command -> create table sales_order_csv
-          (
+command -> > Create table sales_order_csv
+    > (order_no int,
+    >  quantity_ordered int,
+    >  price_each DOUBLE,
+    >  order_line_no int,
+    >  sales double,
+    >  status string,
+    >  qtr_id int,
+    >  month_id int,
+    >  year_id int,
+    >  product_line string,
+    >  msrp int,
+    >  product_code string,
+    >  phone string,
+    >  city string,
+    >  state string,
+    >  postal_code string,
+    >  country string,
+    >  territory string,
+    >  lastname string,
+    >  firstname string,
+    >  deal_size string)
+    >  row format delimited
+    >  fields terminated by ','
+    >  tblproperties ("skip.header.line.count"="1");
+
+step-4
+Load data from hdfs path into "sales_order_csv"
+command->  load data local inpath 'file:///home/cloudera/data/sales_order_data.csv/' into table sales_order_csv;
+
+step-4
+Create an internal hive table which will store data in ORC format "sales_order_orc
+command-> 
+        
                     
           
           
