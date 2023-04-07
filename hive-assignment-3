@@ -74,9 +74,115 @@ step-4
 Load data from hdfs path into "sales_order_csv"
 command->  load data local inpath 'file:///home/cloudera/data/sales_order_data.csv/' into table sales_order_csv;
 
-step-4
+step-5
 Create an internal hive table which will store data in ORC format "sales_order_orc
-command-> 
+command-> Create table sales_order_orc
+(order_no int,
+ quantity_ordered int,
+ price_each DOUBLE,
+ order_line_no int,
+ sales double,
+ status string,
+ qtr_id int,
+ month_id int,
+ year_id int,
+ product_line string,
+ msrp int,
+ product_code string,
+ phone string,
+ city string,
+ state string,
+ postal_code string,
+ country string,
+ territory string,
+ lastname string,
+ firstname string,
+ deal_size string)
+ stored as orc;
+ 
+step-6
+Load data from "sales_order_csv" into "sales_order_orc"
+command-> from sales_order_csv insert overwrite table sales_order_orc select *;
+
+
+
+a. Calculatye total sales per year
+  command->
+  select year_id,sum(sales) from sales_order_orc group by year_id;
+  
+  >>>>>>>>>>>result<<<<<<<<<<<
+  
+  Query ID = cloudera_20230407043939_bbb90fd7-4ed6-49a8-9a25-0bea7f7f286d
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1680853947493_0002, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1680853947493_0002/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1680853947493_0002
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-04-07 04:39:41,518 Stage-1 map = 0%,  reduce = 0%
+2023-04-07 04:39:57,495 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.92 sec
+2023-04-07 04:40:21,213 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 4.14 sec
+MapReduce Total cumulative CPU time: 4 seconds 140 msec
+Ended Job = job_1680853947493_0002
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 4.14 sec   HDFS Read: 38189 HDFS Write: 62 SUCCESS
+Total MapReduce CPU Time Spent: 4 seconds 140 msec
+OK
+2003    3516979.540000001
+2004    4724162.599999997
+2005    1791486.71
+Time taken: 64.168 seconds, Fetched: 3 row(s) 
+
+b. Find a product for which maximum orders were placed
+command->
+select MAX(quantity_ordered) as maximum_order,product_line from sales_order_orc group by product_line; 
+ 
+ >>>>>>>>>>>result<<<<<<<<<< 
+
+Query ID = cloudera_20230407044949_12858a36-53a2-4502-9100-66f14f1efefe
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1680853947493_0003, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1680853947493_0003/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1680853947493_0003
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-04-07 04:49:56,489 Stage-1 map = 0%,  reduce = 0%
+2023-04-07 04:50:13,331 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.95 sec
+2023-04-07 04:50:31,478 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 4.18 sec
+MapReduce Total cumulative CPU time: 4 seconds 180 msec
+Ended Job = job_1680853947493_0003
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 4.18 sec   HDFS Read: 29334 HDFS Write: 96 SUCCESS
+Total MapReduce CPU Time Spent: 4 seconds 180 msec
+OK
+97      Classic Cars
+66      Motorcycles
+85      Planes
+55      Ships
+51      Trains
+70      Trucks and Buses
+76      Vintage Cars
+
+c. Calculate the total sales for each quarter
+d. In which quarter sales was minimum
+e. In which country sales was maximum and in which country sales was minimum
+f. Calculate quartelry sales for each city
+h. Find a month for each year in which maximum number of quantities were sold
+
+
+
         
                     
           
